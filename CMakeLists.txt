@@ -46,20 +46,16 @@ src/instructions_portable.cpp
 src/reciprocal.c
 src/virtual_machine.cpp
 src/vm_compiled_light.cpp
-src/blake2/blake2b.c)
+src/blake2/blake2b.c
+src/jit_compiler_x86_static.S
+src/jit_compiler_x86.cpp)
 
-if (ARCH_ID STREQUAL "x86_64" OR ARCH_ID STREQUAL "x86-64" OR ARCH_ID STREQUAL "amd64")
-  list(APPEND randomx_sources
-    src/jit_compiler_x86_static.S
-    src/jit_compiler_x86.cpp)
-  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -maes")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -maes")
-endif()
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -maes")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -maes")
 
 set(RANDOMX_INCLUDE "${CMAKE_CURRENT_SOURCE_DIR}/src" CACHE STRING "RandomX Include path")
 
-add_library(randomx
-  ${randomx_sources})
+add_library(randomx SHARED ${randomx_sources})
 target_link_libraries(randomx
   PRIVATE
     ${CMAKE_THREAD_LIBS_INIT})
