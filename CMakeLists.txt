@@ -46,21 +46,38 @@ src/instructions_portable.cpp
 src/reciprocal.c
 src/virtual_machine.cpp
 src/vm_compiled_light.cpp
-src/blake2/blake2b.c
-src/jit_compiler_x86_static.S
-src/jit_compiler_x86.cpp)
+src/blake2/blake2b.c)
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -maes")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -maes")
 
 set(RANDOMX_INCLUDE "${CMAKE_CURRENT_SOURCE_DIR}/src" CACHE STRING "RandomX Include path")
 
-add_library(randomx SHARED ${randomx_sources})
+if(MSVC)
+  enable_language(ASM_MASM)
+
+  list(APPEND randomx_sources
+    src/jit_compiler_x86_static.asm
+    src/jit_compiler_x86.cpp)
+
+  # cheat because cmake and ccache hate each other
+  set_property(SOURCE src/jit_compiler_x86_static.asm PROPERTY LANGUAGE ASM_MASM)
+
+  add_library(randomx SHARED ${randomx_sources})
+  add_library(randomx STATIC ${randomx_sources})
+else()
+  list(APPEND randomx_sources
+    src/jit_compiler_x86_static.S
+    src/jit_compiler_x86.cpp)
+
+  # cheat because cmake and ccache hate each other
+  set_property(SOURCE src/jit_compiler_x86_static.S PROPERTY LANGUAGE C)  
+  
+  add_library(randomx SHARED ${randomx_sources})
+endif()
+
 target_link_libraries(randomx
   PRIVATE
     ${CMAKE_THREAD_LIBS_INIT})
 set_property(TARGET randomx PROPERTY POSITION_INDEPENDENT_CODE ON)
 set_property(TARGET randomx PROPERTY CXX_STANDARD 11)
-
-# cheat because cmake and ccache hate each other
-set_property(SOURCE src/jit_compiler_x86_static.S PROPERTY LANGUAGE C)
