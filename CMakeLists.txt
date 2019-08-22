@@ -63,7 +63,6 @@ if(MSVC)
   # cheat because cmake and ccache hate each other
   set_property(SOURCE src/jit_compiler_x86_static.asm PROPERTY LANGUAGE ASM_MASM)
 
-  add_library(randomx SHARED ${randomx_sources})
   add_library(randomx STATIC ${randomx_sources})
 else()
   list(APPEND randomx_sources
