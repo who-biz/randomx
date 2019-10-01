@@ -30,6 +30,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define RANDOMX_H
 
 #include <stddef.h>
+#include <stdint.h>
 
 #define RANDOMX_HASH_SIZE 32
 #define RANDOMX_DATASET_ITEM_SIZE 64
@@ -100,7 +101,7 @@ RANDOMX_EXPORT randomx_dataset *randomx_alloc_dataset(randomx_flags flags);
  *
  * @return the number of items contained in the dataset.
 */
-RANDOMX_EXPORT unsigned long randomx_dataset_item_count(void);
+RANDOMX_EXPORT uint64_t randomx_dataset_item_count(void);
 
 /**
  * Initializes dataset items.
@@ -113,7 +114,7 @@ RANDOMX_EXPORT unsigned long randomx_dataset_item_count(void);
  * @param startItem is the item number where intialization should start.
  * @param itemCount is the number of items that should be initialized.
 */
-RANDOMX_EXPORT void randomx_init_dataset(randomx_dataset *dataset, randomx_cache *cache, unsigned long startItem, unsigned long itemCount);
+RANDOMX_EXPORT void randomx_init_dataset(randomx_dataset *dataset, randomx_cache *cache, uint64_t startItem, uint64_t itemCount);
 
 /**
  * Returns a pointer to the internal memory buffer of the dataset structure. The size
