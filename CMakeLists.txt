@@ -30,6 +30,8 @@ cmake_minimum_required(VERSION 3.00)
 
 project(randomx)
 
+add_definitions(-w)
+
 set (randomx_sources
 src/aes_hash.cpp
 src/argon2_ref.c
